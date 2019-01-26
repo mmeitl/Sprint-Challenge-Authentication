@@ -1,5 +1,6 @@
 const axios = require('axios');
 const bcrypt = require('bcryptjs');
+const userDb = require('../database/dbConfig.js');
 const { authenticate, generateToken } = require('../auth/authenticate');
 
 module.exports = server => {
@@ -34,7 +35,7 @@ function login(req, res) {
 
 				const token = generateToken(user);
 
-				res.status(200).json({ message: `hello ${user.name}`, token });
+				res.status(200).json({ message: `hello ${user.username}`, token });
 			} else {
 				res.status(401).json({ you: 'you are not allowed' });
 			}

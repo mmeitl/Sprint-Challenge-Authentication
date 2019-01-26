@@ -1,12 +1,14 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-const jwtKey =
-  process.env.JWT_SECRET ||
+const jwtKey = 
+  process.env.JWT_SECRET||
   'add a .env file to root of project with the JWT_SECRET variable';
 
 // quickly see what this file exports
 module.exports = {
   authenticate,
+  generateToken
 };
 
 // implementation details
@@ -39,7 +41,7 @@ function generateToken(user) {
   console.log(secret)
 
 	const options = {
-		expiresIn: '5m',
+		expiresIn: '1h',
 	};
 
 	return jwt.sign(payload, secret, options);
