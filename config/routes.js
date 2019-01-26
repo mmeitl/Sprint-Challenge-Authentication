@@ -35,7 +35,7 @@ function login(req, res) {
 
 				const token = generateToken(user);
 
-				res.status(200).json({ message: `hello ${user.username}`, token });
+				res.status(200).json({ message: `Welcome ${user.username}`, token });
 			} else {
 				res.status(401).json({ you: 'you are not allowed' });
 			}
