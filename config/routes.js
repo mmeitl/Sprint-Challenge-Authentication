@@ -1,6 +1,6 @@
 const axios = require('axios');
-
-const { authenticate } = require('../auth/authenticate');
+const bcrypt = require('bcryptjs');
+const { authenticate, generateToken } = require('../auth/authenticate');
 
 module.exports = server => {
   server.post('/api/register', register);
@@ -10,10 +10,36 @@ module.exports = server => {
 
 function register(req, res) {
   // implement user registration
+  const {username, password} = req.body;
+	const hash = bcrypt.hashSync(password, 14);
+  const userInfo = {
+    username, password: hash
+  }
+	userDb('users')
+		.insert(userInfo)
+		.then(ids => {
+			res.status(201).json(ids);
+		})
+		.catch(err => res.status(500).json({errorMessage: err}));
 }
 
 function login(req, res) {
-  // implement user login
+  const { username, password } = req.body;
+
+	userDb('users')
+		.where({ username })
+		.first()
+		.then(user => {
+			if (user && bcrypt.compareSync(password, user.password)) {
+
+				const token = generateToken(user);
+
+				res.status(200).json({ message: `hello ${user.name}`, token });
+			} else {
+				res.status(401).json({ you: 'you are not allowed' });
+			}
+		})
+		.catch(err => res.status(500).json({errorMessage: err}));
 }
 
 function getJokes(req, res) {
